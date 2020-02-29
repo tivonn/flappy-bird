@@ -1,5 +1,6 @@
 import 'phaser'
-import {Tweens, Structs, Physics} from 'phaser'
+import { Tweens, Structs, Physics } from 'phaser'
+import localForage from 'localforage'
 
 const HEIGHT: number = 896
 const GAP: number = 250
@@ -18,17 +19,20 @@ enum Status {
 export default class FlappyBird extends Phaser.Scene {
   status: Status
   size: Structs.Size
+  startLayer: Phaser.GameObjects.DOMElement
+  currentUser: string
   bird: Phaser.Physics.Arcade.Sprite
   birdFly: Tweens.Tween
   birdFloat: Tweens.Tween
   pipes: Phaser.Physics.Arcade.Group
   makePipeTimer: Phaser.Time.TimerEvent
-  passTimer: Phaser.Time.TimerEvent
+  passPipeTimer: Phaser.Time.TimerEvent
   firstAlivePipe: Physics.Arcade.Image
   birdAliveTimer: Phaser.Time.TimerEvent
   score: number
   scoreText: Phaser.GameObjects.Text
   changeScoreText: Phaser.GameObjects.Text
+  endLayer: Phaser.GameObjects.DOMElement
 
   constructor () {
     super('Bird')
@@ -138,6 +142,8 @@ export default class FlappyBird extends Phaser.Scene {
   }
 
   ready () {
+    // open start panel
+    this.openStartPanel()
     // init bird
     ;(this.bird.body as Physics.Arcade.Body).setAllowGravity(false)
     this.bird.setAngle(0)
@@ -150,6 +156,39 @@ export default class FlappyBird extends Phaser.Scene {
     // init score
     this.setScore(0)
     this.status = Status.ready
+  }
+
+  openStartPanel() {
+    if (!this.startLayer) {
+      this.startLayer = this.add.dom(0, 0, '#start')
+      this.startLayer.addListener('click')
+      this.startLayer.addListener('keydown')
+      this.startLayer.on('click', ({target}) => {
+        target.classList.contains('start-button') && this.saveUserName()
+        if (target.classList.contains('operation-container')) {
+          const startPanel = document.querySelector('#start')
+          if (startPanel.classList.contains('in-rank')) {
+            startPanel.classList.remove('in-rank')
+          } else {
+            startPanel.classList.add('in-rank')
+            this.openRankPanel(true)
+          }
+        }
+      })
+      this.startLayer.on('keydown', e => {
+        if (e.code === 'Enter' && e.target.classList.contains('name-input')) {
+          this.saveUserName()
+        }
+      })
+    }
+    this.startLayer.setVisible(true)
+  }
+
+  saveUserName() {
+    const userName = document.querySelector<HTMLInputElement>('.name-input').value.trim()
+    if (!userName) return alert('昵称不能为空')
+    this.currentUser = userName
+    this.startLayer.setVisible(false)
   }
 
   start () {
@@ -165,7 +204,7 @@ export default class FlappyBird extends Phaser.Scene {
       callbackScope: this
     })
     // use update lifecycle is too often
-    this.passTimer = this.time.addEvent({
+    this.passPipeTimer = this.time.addEvent({
       delay: 200,
       callback: this.checkPass,
       loop: true,
@@ -190,7 +229,7 @@ export default class FlappyBird extends Phaser.Scene {
     })
   }
 
-  makePipe() {
+  makePipe () {
     let up = this.physics.add.image(this.size.width + 100, 0, 'pipe')
     up.setName('up')
     up.setFlipY(true)
@@ -226,15 +265,15 @@ export default class FlappyBird extends Phaser.Scene {
     })
   }
 
-  stopPipes() {
+  stopPipes () {
     this.makePipeTimer.destroy()
   }
 
-  aliveScore() {
+  aliveScore () {
     this.addScore(ALIVE_SCORE, false)
   }
 
-  checkPass() {
+  checkPass () {
     if (this.pipes.getLength() <= 0) return
     if (!this.firstAlivePipe) {
       this.firstAlivePipe = this.pipes.getFirstAlive()
@@ -272,6 +311,16 @@ export default class FlappyBird extends Phaser.Scene {
     }
   }
 
+  saveScore(score: number) {
+    return localForage.length().then(numberOfKeys => {
+      const id = String(numberOfKeys + 1)
+      return localForage.setItem(id, {
+        userName: this.currentUser,
+        score
+      })
+    })
+  }
+
   die () {
     this.status = Status.end
     // stop bird
@@ -282,8 +331,34 @@ export default class FlappyBird extends Phaser.Scene {
     this.stopPipes()
     this.pipes.setVelocityX(0)
     // stop timer
-    this.passTimer.destroy()
+    this.passPipeTimer.destroy()
     this.birdAliveTimer.destroy()
+    // open end panel
+    this.saveScore(this.score).then(() => this.openEndPanel())
+  }
+
+  openEndPanel() {
+    if (!this.endLayer) {
+      this.endLayer = this.add.dom(0, 0, '#end')
+      document.querySelector('.replay-button').addEventListener('click', () => {
+        this.endLayer.setVisible(false)
+        this.ready()
+      })
+    }
+    this.openRankPanel(false)
+    this.endLayer.setVisible(true)
+  }
+
+  openRankPanel(isStart) {
+    const scoreList = []
+    localForage.iterate((localItem) => {
+      scoreList.push(localItem)
+    }).then(() => {
+      scoreList.sort((a, b) => b.score - a.score)
+      let html = ''
+      scoreList.slice(0, 20).forEach(item => html += `<div class="score-item"><span>${item.userName}</span><span>${item.score}</span></div>`)
+      document.querySelector(`.${isStart ? 'start' : 'end'}-score-trophy`).innerHTML = html
+    })
   }
 }
 

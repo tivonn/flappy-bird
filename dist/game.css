@@ -1,0 +1,162 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-size: 16px;
+}
+@font-face {
+  font-family: fb;
+  src: url(./assets/FB.eot);
+  src: url(./assets/FB.eot?#iefix) format("embedded-opentype"),url(./assets/FB.woff) format("woff"),url(./assets/FB.ttf) format("truetype"),url(./assets/FB.svg#04b_19regular) format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+#start, #end {
+  width: 100%;
+  height: 100%;
+  display: none;
+  transform: none !important;
+}
+.cover {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+#end .cover {
+  flex-direction: column;
+}
+.operation-container {
+  position: absolute;
+  top: 0.2rem;
+  right: 10vw;
+  font-size: 0.18rem;
+  color: #faac36;
+  cursor: pointer;
+}
+.trophy-icon, .back-icon {
+  width: 0.2rem;
+  height: 0.2rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+.trophy-icon {
+  background: url("./assets/trophy.svg") no-repeat center/contain;
+}
+.trophy-button, .back-button {
+  vertical-align: middle;
+  pointer-events: none;
+}
+.back-icon {
+  background: url("./assets/back.svg") no-repeat center/contain;
+}
+#start.in-rank .trophy-button, #start.in-rank .input-container {
+  display: none;
+}
+#start:not(.in-rank) .back-button, #start:not(.in-rank) .score-container {
+  display: none;
+}
+.name-input {
+  width: 3rem;
+  height: 0.4rem;
+  padding: 0.1rem;
+  background-color: transparent;
+  border: 0.2em dashed #9ce659;
+  border-radius: 5px;
+  vertical-align: middle;
+  font-size: 0.3rem;
+  color: #faac36;
+  text-align: center;
+  outline: none;
+}
+.start-button {
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-left: 0.2rem;
+  background: url("./assets/start.svg") no-repeat center/contain;
+  border: none;
+  border-radius: 50%;
+  vertical-align: middle;
+  outline: none;
+  cursor: pointer;
+}
+.over-text {
+  font-size: 0.3rem;
+  color: #fff;
+}
+.score-container {
+  margin-top: 0.1rem;
+  font-size: 0.25rem;
+  color: #faac36;
+}
+.score-title {
+  margin-bottom: -0.3rem;
+  font-size: 0.2rem;
+  text-align: center;
+}
+.score {
+  width: 3.2rem;
+  height: 3.5rem;
+  position: relative;
+  padding: 0.3rem 0.25rem;
+  border: 0.02rem solid #faac36;
+  overflow: hidden;
+}
+.score-border {
+  width: 0.4rem;
+  height: 0.4rem;
+  position: absolute;
+  background: url("./assets/border.svg") no-repeat center/contain;
+}
+.score-border.left-top {
+  top: 0;
+  left: -1px;
+}
+.score-border.right-top {
+  top: 0;
+  right: -1px;
+  transform: rotateZ(90deg);
+  transform-origin: center;
+}
+.score-border.left-bottom {
+  bottom: -1px;
+  left: 0;
+  transform: rotateZ(-90deg);
+  transform-origin: center;
+}
+.score-border.right-bottom {
+  right: -1px;
+  bottom: -1px;
+  transform: rotateZ(180deg);
+  transform-origin: center;
+}
+.score-list {
+  font-size: 0.135rem;
+}
+.score-list .score-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+.score-list span:first-child {
+  display: inline-block;
+  flex-basis: 2rem;
+}
+.score-list span:last-child {
+  flex-grow: 1;
+}
+.replay-button {
+  width: 0.6rem;
+  height: 0.6rem;
+  position: absolute;
+  top: calc(50% - 0.3rem);
+  right: 2rem;
+  background: url("./assets/replay.svg") no-repeat center/contain;
+  cursor: pointer;
+}

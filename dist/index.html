@@ -3,25 +3,58 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <script src="game.js"></script>
-    <style>
-      body {
-        width: 100vw;
-        height: 100vh;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-      }
-      @font-face {
-        font-family: fb;
-        src: url(./assets/FB.eot);
-        src: url(./assets/FB.eot?#iefix) format("embedded-opentype"),url(./assets/FB.woff) format("woff"),url(./assets/FB.ttf) format("truetype"),url(./assets/FB.svg#04b_19regular) format("svg");
-        font-weight: normal;
-        font-style: normal
-      }
-    </style>
+    <link rel="stylesheet" href="game.css">
   </head>
   <body>
+    <div id="start">
+      <div class="cover">
+        <div class="operation-container">
+          <i class="trophy-icon trophy-button"></i>
+          <span class="trophy-button">排行榜</span>
+          <i class="back-icon back-button"></i>
+          <span class="back-button">返回</span>
+        </div>
+        <div class="input-container">
+          <input type="text" class="name-input" maxlength="11" placeholder="请输入昵称"/>
+          <button class="start-button"></button>
+        </div>
+        <div class="score-container">
+          <div class="score-title">排行榜</div>
+          <div class="score">
+            <div class="score-border left-top"></div>
+            <div class="score-border right-top"></div>
+            <div class="score-border left-bottom"></div>
+            <div class="score-border right-bottom"></div>
+            <div class="score-list start-score-trophy"></div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div id="end">
+      <div class="cover">
+        <div class="over-text">游戏结束</div>
+        <div class="score-container">
+          <div class="score-title">排行榜</div>
+          <div class="score">
+            <div class="score-border left-top"></div>
+            <div class="score-border right-top"></div>
+            <div class="score-border left-bottom"></div>
+            <div class="score-border right-bottom"></div>
+            <div class="score-list end-score-trophy"></div>
+          </div>
+        </div>
+        <div class="replay-button"></div>
+      </div>
+    </div>
     <i style="font-family: fb;"></i>
+    <script src="game.js"></script>
+    <script>
+      const setFontSize = () => {
+        document.documentElement.style.fontSize = `${document.documentElement.clientWidth / 10}px`
+      }
+      setFontSize()
+      window.addEventListener('resize', setFontSize)
+    </script>
   </body>
 </html>
