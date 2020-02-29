@@ -2,7 +2,7 @@
 
 ## 项目介绍
 
-tap the screen to make the bird fly
+tap the screen to make the bird fly and crossing pipes
 
 ## 游戏规则
 
