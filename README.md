@@ -2,7 +2,7 @@
 
 ## 项目介绍
 
-tap the screen to make the bird fly and crossing pipes / 触碰屏幕使小鸟飞越水管
+触碰屏幕使小鸟飞越水管 / tap the screen to make the bird fly and crossing pipes
 
 ## 游戏规则
 
